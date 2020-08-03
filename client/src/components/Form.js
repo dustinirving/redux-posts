@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
+import { createPost } from '../actions/postActions'
 
-const Form = ({ handleChange, handleSubmit, form }) => {
+const Form = props => {
+  const [form, setForm] = useState({ title: '', message: '' })
+
+  const handleSubmit = e => {
+    e.preventDefault()
+    props.createPost(form)
+    setForm({ title: '', message: '' })
+  }
+
+  const handleChange = e => {
+    const { name, value } = e.target
+    setForm({ ...form, [name]: value })
+  }
   return (
     <form style={{ width: '50%', margin: 'auto' }} onSubmit={handleSubmit}>
       <div className='form-group'>
@@ -29,5 +43,10 @@ const Form = ({ handleChange, handleSubmit, form }) => {
     </form>
   )
 }
+const mapStateToProps = state => {
+  return {
+    posts: state.posts
+  }
+}
 
-export default Form
+export default connect(mapStateToProps, { createPost })(Form)
